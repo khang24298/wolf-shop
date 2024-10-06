@@ -1,61 +1,80 @@
 <?php
 
-namespace Tests\Feature\Commands;
+namespace Tests\Unit\Commands;
 
 use App\Console\Commands\ImportItem;
+use App\Helpers\ItemHelper;
 use App\Models\Item;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+
 
 class ImportItemTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
-
-    public function testSuccessfulImport()
+    use RefreshDatabase;
+    protected $clientMock;
+    protected function setUp(): void
     {
-        // Mock external dependencies
-        $client = $this->mock(Client::class);
-        $client->shouldReceive('get')
-            ->once()
-            ->andReturnSelf();
-        $client->shouldReceive('get')
-            ->once()
-            ->andReturn('{"items":[{"name":"Test Item", "quality":10}]}');
-
-        // Run the command
-        $command = new ImportItem;
-        $exitCode = $command->handle();
-
-        // Assert the result
-        $this->assertEquals(0, $exitCode);
-        // $this->expectOutputString('Items imported successfully!');
+        parent::setUp();
+        // Mocking the Guzzle HTTP Client
+        $this->clientMock = $this->mock(Client::class);
+        // Binding the mocks into the application container
+        $this->app->instance(Client::class, $this->clientMock);
     }
 
-    public function testImportWithExistingItem()
+    /** @test */
+    public function test_items_import_successfully()
     {
-        // ... (similar setup as above)
+        // Arrange
+        $importedData = [
+            ['name' => 'Item 1', 'data' => ['price' => 10]],
+            ['name' => 'Item 2', 'data' => ['price' => 3]],
+        ];
 
-        // Mock Item::where to return an existing item
-        Item::shouldReceive('where')
-            ->once()
-            ->with('name', '=', 'Test Item')
-            ->andReturnSelf();
-        Item::shouldReceive('first')
-            ->once()
-            ->andReturn(Item::factory()->create(['name' => 'Test Item']));
+        $mappedData1 = ItemHelper::mappingRawDataToItem($importedData[0]);
+        $mappedData2 = ItemHelper::mappingRawDataToItem($importedData[1]);
 
-        // ... (rest of the test)
+        // Mock Guzzle HTTP response
+        $responseMock = new Response(200, [], json_encode($importedData));
+        $this->clientMock->shouldReceive('get')
+            ->once()
+            ->andReturn($responseMock);
+
+        // Create an Item for the first entry
+        Item::factory()->create(['name' => $mappedData1['name'], 'quality' => 5]);
+        // var_dump(Item::all());
+        $this->artisan(ImportItem::class)
+            ->expectsOutput('Items imported successfully!')
+            ->assertExitCode(0);
+        
+        // Assert that the first item was updated and the second was created
+        $this->assertDatabaseHas('items', [
+            'name' => 'Item 1',
+            'quality' => 10, // The quality should have been updated
+        ]);
+
+        $this->assertDatabaseHas('items', [
+            'name' => 'Item 2',
+            'quality' => 3, // The second item should have been created
+        ]);
     }
 
-    public function testFailedImport()
+    /** @test */
+    public function test_import_fails_due_to_exception()
     {
-        // ... (similar setup as above)
+        // Arrange
+        $exceptionMessage = 'Connection failed';
 
-        // Mock the client to throw an exception
-        $client->shouldReceive('get')->andThrowException(new \Exception('API error'));
+        // Mock Guzzle to throw an exception
+        $this->clientMock->shouldReceive('get')
+            ->once()
+            ->andThrowExceptions([new \Exception($exceptionMessage, 521)]);
 
-        // ... (rest of the test)
+        // Act
+        $this->artisan(ImportItem::class)
+            ->expectsOutput($exceptionMessage)
+            ->assertExitCode(521);  // Non-zero exit code for failure
     }
 }

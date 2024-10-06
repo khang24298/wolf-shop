@@ -48,7 +48,7 @@ class ImportItem extends Command
                     $item->save();
                 } else {
                     // Create new item
-                    Item::create($itemConverted);
+                    Item::factory()->create($itemConverted);
                 }
             }
             $this->info('Items imported successfully!');
