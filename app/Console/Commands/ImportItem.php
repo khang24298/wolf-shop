@@ -23,17 +23,21 @@ class ImportItem extends Command
      */
     protected $description = 'Command description';
 
+    private $client;
+    public function __construct(Client $client){
+        parent::__construct();
+        $this->client = $client;
+    }
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $client = new Client;
         $code = 0; // 0: success
         $configImport = config('services.import_items');
         $uriImport = $configImport['host'].$configImport['path'];
         try {
-            $response = $client->get($uriImport);
+            $response = $this->client->get($uriImport);
             $data = json_decode($response->getBody(), true);
             foreach ($data as $itemData) {
                 $itemConverted = ItemHelper::mappingRawDataToItem($itemData);

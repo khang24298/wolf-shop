@@ -6,7 +6,7 @@ class ItemHelper
 {
     public static function mappingRawDataToItem(array $rawItem): array
     {
-        $rawItemData = $rawItem['data'];
+        $rawItemData = $rawItem['data'] ?? null;
         $rawPrice = $rawItemData['Price'] ?? $rawItemData['price'] ?? 0;
         $rawDate = $rawItemData['year'] ?? date('Y');
         $item = [

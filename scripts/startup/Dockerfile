@@ -18,7 +18,7 @@ RUN a2enmod rewrite
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
 # Update the default Apache site configuration
-COPY scripts/apache-config.conf /etc/apache2/sites-available/000-default.conf
+COPY scripts/startup/apache-config.conf /etc/apache2/sites-available/000-default.conf
 
 # Install PHP extensions.
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \

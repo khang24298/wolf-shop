@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Cloudinary\Api\ApiResponse;
 use Cloudinary\Api\Upload\UploadApi;
 use Cloudinary\Configuration\Configuration;
 
@@ -10,9 +9,14 @@ class CloudinaryService
 {
     private $config;
 
+    private $uploadApi;
+
     public function __construct()
     {
         $this->setConfiguration();
+
+        // Set config for uploadApi
+        $this->uploadApi = new UploadApi($this->config);
     }
 
     private function setConfiguration()
@@ -29,11 +33,10 @@ class CloudinaryService
         return $this->config;
     }
 
-    public function uploadMedia($file, array $options = []): ApiResponse
+    public function uploadMedia($file, array $options = [])
     {
         try {
-            $uploadApi = new UploadApi($this->config);
-            $result = $uploadApi->upload($file, $options);
+            $result = $this->uploadApi->upload($file, $options);
         } catch (\Throwable $th) {
             throw $th;
         }

@@ -10,7 +10,12 @@ use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-    public function __construct() {}
+    public $cloudinaryService;
+
+    public function __construct(CloudinaryService $cloudinaryService)
+    {
+        $this->cloudinaryService = $cloudinaryService;
+    }
 
     /**
      * Display a listing of the resource.
@@ -46,9 +51,8 @@ class ItemController extends Controller
             return response()->json(['message' => 'Item not found'], 404);
         }
 
-        $cloudinaryService = new CloudinaryService;
         try {
-            $response = $cloudinaryService->uploadMedia($request['image']);
+            $response = $this->cloudinaryService->uploadMedia($request['image']);
             $item->imgUrl = $response['secure_url'];
             $item->quality = $request['quality'] ?? $item->quality;
             $item->sellIn = $request['sell_in'] ?? $item->sellIn;

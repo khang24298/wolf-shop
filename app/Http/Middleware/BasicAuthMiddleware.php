@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 class BasicAuthMiddleware
 {
     /**
@@ -14,16 +15,16 @@ class BasicAuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $authentication = $request->header('authorization')){
+        if (! $authentication = $request->header('authorization')) {
             return response()->json(['message' => 'Basic Auth not set'], 401);
         }
         $authentication = $request->header('authorization');
-        $token = explode(' ',$authentication)[1];
+        $token = explode(' ', $authentication)[1];
         $decodeToken = base64_decode($token);
-        $requestCredentials = explode(":",$decodeToken);
+        $requestCredentials = explode(':', $decodeToken);
 
         // Hardcoded credentials (replace with your actual credentials)
-        $expectedCredentials = ['your_email@example.com','your_password'];
+        $expectedCredentials = ['your_email@example.com', 'your_password'];
 
         if ($requestCredentials !== $expectedCredentials) {
             return response()->json(['message' => 'Invalid credentials'], 401);

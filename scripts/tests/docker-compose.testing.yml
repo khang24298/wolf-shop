@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   # WolfShop Application
   wolfshop-app:
@@ -17,20 +18,21 @@ services:
     networks:
       - wolfshop-net
 
-  # WolfShop Database
-  wolfshop-mysql:
+  # WolfShop Test Database
+  wolfshop-mysql-test:
     image: mysql:8.0
-    container_name: wolfshop-mysql
+    container_name: wolfshop-mysql-test
     ports:
-      - "3306:3306"
+      - "33061:33061"
     environment:
       MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: wolf_shop
-      MYSQL_USER: app_user
-      MYSQL_PASSWORD: app_password
+      MYSQL_DATABASE: wolf_shop_test
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_password
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      - ./mysql_data_test:/var/lib/mysql
     networks:
       - wolfshop-net
+
 networks:
   wolfshop-net:
