@@ -1,25 +1,26 @@
 version: '3.8'
 services:
-  # Laravel Application
-  app:
+  # WolfShop Application
+  wolfshop-app:
     build:
       context: ./
       dockerfile: scripts/Dockerfile
-    container_name: laravel-app
+    container_name: wolfshop-app
     volumes:
       - ./:/var/www/html
     ports:
       - "8080:80"
     environment:
       - APACHE_DOCUMENT_ROOT=/var/www/html/public
+      - APACHE_LOG_DIR=/var/log/apache2
     depends_on:
-      - mysql
+      - wolfshop-mysql
     networks:
-      - laravel-net
-  # MySQL Database
-  mysql:
+      - wolfshop-net
+  # WolfShop Database
+  wolfshop-mysql:
     image: mysql:8.0
-    container_name: laravel-mysql
+    container_name: wolfshop-mysql
     ports:
       - "3306:3306"
     environment:
@@ -30,7 +31,7 @@ services:
     volumes:
       - ./mysql_data:/var/lib/mysql
     networks:
-      - laravel-net
+      - wolfshop-net
 
 networks:
-  laravel-net:
+  wolfshop-net:
