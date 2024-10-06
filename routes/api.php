@@ -18,4 +18,4 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::put('/items/{id}', [ItemController::class, 'update']);
+Route::middleware('auth.basic')->put('/items/{id}', [ItemController::class, 'update']);
