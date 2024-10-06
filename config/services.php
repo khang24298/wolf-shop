@@ -31,10 +31,16 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    // Define cloudinary
+    // Declare cloudinary credentials
     'cloudinary' => [
         'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
         'api_key' => env('CLOUDINARY_API_KEY'),
         'api_secret' => env('CLOUDINARY_API_SECRET'),
+    ],
+
+    // Declare 3rd party import apis
+    'import_items' => [
+        'host' => env('3RD_PARTY_IMPORT_HOST', 'https://api.restful-api.dev'),
+        'path' => env('3RD_PARTY_IMPORT_PATH', '/objects'),
     ]
 ];

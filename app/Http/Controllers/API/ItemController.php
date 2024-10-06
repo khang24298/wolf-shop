@@ -48,9 +48,9 @@ class ItemController extends Controller
         $cloudinaryService = new CloudinaryService();
         try {
             $response = $cloudinaryService->uploadMedia($request['image']);
-            $item->img_url = $response['secure_url'];
+            $item->imgUrl = $response['secure_url'];
             $item->quality = $request['quality'] ?? $item->quality;
-            $item->sell_in = $request['sell_in'] ?? $item->sellIn;
+            $item->sellIn = $request['sell_in'] ?? $item->sellIn;
             $item->save();
             $message = 'Updated successfully!';
             $code = 0; // 0: success

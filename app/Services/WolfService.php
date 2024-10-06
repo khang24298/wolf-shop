@@ -16,51 +16,33 @@ final class WolfService
     public function updateQuality(): void
     {
         foreach ($this->items as $item) {
-            if ($item->name != 'Apple AirPods' and $item->name != 'Apple iPad Air') {
-                if ($item->quality > 0) {
-                    if ($item->name != 'Samsung Galaxy S23') {
-                        $item->quality = max(0, $item->name === 'Xiaomi Redmi Note 13' ? $item->quality - 2 : $item->quality - 1);
-                    }
-                }
-            } else {
-                if ($item->quality < 50) {
-                    $item->quality = $item->quality + 1;
-                    if ($item->name == 'Apple iPad Air') {
-                        if ($item->sellIn < 11) {
-                            if ($item->quality < 50) {
-                                $item->quality = $item->quality + 1;
-                            }
-                        }
-                        if ($item->sellIn < 6) {
-                            if ($item->quality < 50) {
-                                $item->quality = $item->quality + 1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if ($item->name != 'Samsung Galaxy S23') {
-                $item->sellIn = $item->sellIn - 1;
-            }
-
-            if ($item->sellIn < 0) {
-                if ($item->name != 'Apple AirPods') {
-                    if ($item->name != 'Apple iPad Air') {
-                        if ($item->quality > 0) {
-                            if ($item->name != 'Samsung Galaxy S23') {
-                                $item->quality = $item->quality - 1;
-                            }
-                        }
-                    } else {
-                        $item->quality = $item->quality - $item->quality;
-                    }
-                } else {
-                    if ($item->quality < 50) {
-                        $item->quality = $item->quality + 1;
-                    }
-                }
-            }
+			if ($item->name === 'Samsung Galaxy S23') {
+				// Do not change anything if product is Samsung Galaxy S23
+				continue;
+			}
+			// Ensure the input item quality value: 0 < quality =< 50
+			$item->quality = $item->quality >= 50 ? 50 : max(0, $item->quality);
+			$item->sellIn--;
+			switch ($item->name) {
+				case 'Xiaomi Redmi Note 13':
+					$qualityDegrade = $item->sellIn < 0 ? 4 : 2;
+					$item->quality = max(0, $item->quality - $qualityDegrade);
+					break;
+				case 'Apple AirPods':
+					$qualityDegrade = $item->sellIn < 0 ? 2 : 1;
+					$item->quality = min(50, $item->quality + $qualityDegrade);
+					break;
+				case 'Apple iPad Air':
+					$item->quality += $item->sellIn < 11 ? 1 : 0;
+					$item->quality += $item->sellIn < 6 ? 1 : 0;
+					$item->quality = $item->sellIn < 0 ? 0 : min(50, $item->quality + 1);
+					break;
+				default:
+					# quality degrades for others
+					$qualityDegrade = $item->sellIn < 0 ? 2 : 1;
+					$item->quality = max(0, $item->quality - $qualityDegrade);
+					break;
+			}
         }
     }
 }

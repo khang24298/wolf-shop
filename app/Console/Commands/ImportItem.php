@@ -6,7 +6,6 @@ use App\Helpers\ItemHelper;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 use App\Models\Item;
-use Illuminate\Support\Facades\DB;
 class ImportItem extends Command
 {
     /**
@@ -29,24 +28,28 @@ class ImportItem extends Command
     public function handle()
     {
         $client = new Client();
-        $code = 0; // 0: success, 1: error
+        $code = 0; // 0: success
+        $configImport = config('services.import_items');
+        $uriImport = $configImport['host'].$configImport['path'];
         try {
-            $response = $client->get('https://api.restful-api.dev/objects');
+            $response = $client->get($uriImport);
             $data = json_decode($response->getBody(), true);
             foreach ($data as $itemData) {
                 $itemConverted = ItemHelper::mappingRawDataToItem($itemData);
                 $item = Item::where('name', '=', $itemConverted['name'])->first();
                 if (!empty($item)) {
+                    // Update quality if exist
                     $item->quality = $itemConverted['quality'];
-                    $item->save(); // Update quality if exist
+                    $item->save();
                 } else {
-                    Item::create($itemConverted); // Create new item
+                    // Create new item
+                    Item::create($itemConverted);
                 }
             }
             $this->info('Items imported successfully!');
         } catch(\Exception $e){
             $this->error($e->getMessage());
-            $code = 1;
+            $code = $e->getCode();
         }
         return $code;
     }

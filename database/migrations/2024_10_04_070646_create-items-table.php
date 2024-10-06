@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->integer('quality')->default(0);
-            $table->integer('sell_in')->default(0);
-            $table->string('img_url')->nullable();
+            $table->integer('sellIn')->default(0);
+            $table->string('imgUrl')->nullable();
             $table->timestamps();
         });
     }
