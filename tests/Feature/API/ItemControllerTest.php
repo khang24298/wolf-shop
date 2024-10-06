@@ -1,11 +1,12 @@
 <?php
+
 namespace Tests\Feature\API;
 
+use App\Models\Item;
+use App\Services\CloudinaryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\Item;
-use App\Services\CloudinaryService;
 
 class ItemControllerTest extends TestCase
 {
@@ -17,7 +18,7 @@ class ItemControllerTest extends TestCase
         $item = Item::factory()->create();
         // Prepare update data
         $updateData = [
-            'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5ggBAykwo2MaGdsCnM5YYtpsBPruQp7UIRg&s'
+            'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5ggBAykwo2MaGdsCnM5YYtpsBPruQp7UIRg&s',
         ];
 
         // Mock the CloudinaryService::uploadMedia method to return a sample response
@@ -26,7 +27,7 @@ class ItemControllerTest extends TestCase
             ->once()
             ->andReturn(['secure_url' => 'https://example.com/image.jpg']);
 
-        // Send the update request  
+        // Send the update request
         $response = $this->putJson("/api/items/{$item->id}", $updateData);
         // Assert the response
         $response->assertStatus(200)
@@ -46,7 +47,7 @@ class ItemControllerTest extends TestCase
         $item = Item::factory()->create();
         // Prepare update data
         $updateData = [
-            'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5ggBAykwo2MaGdsCnM5YYtpsBPruQp7UIRg&s'
+            'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5ggBAykwo2MaGdsCnM5YYtpsBPruQp7UIRg&s',
         ];
 
         // Mock the CloudinaryService::uploadMedia method to return a sample response

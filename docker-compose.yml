@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  # Laravel Application
+  app:
+    build:
+      context: ./
+      dockerfile: scripts/Dockerfile
+    container_name: laravel-app
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8080:80"
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+    depends_on:
+      - mysql
+    networks:
+      - laravel-net
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: laravel-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: wolf_shop
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_password
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - laravel-net
+
+networks:
+  laravel-net:

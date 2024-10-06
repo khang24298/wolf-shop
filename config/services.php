@@ -42,5 +42,5 @@ return [
     'import_items' => [
         'host' => env('3RD_PARTY_IMPORT_HOST', 'https://api.restful-api.dev'),
         'path' => env('3RD_PARTY_IMPORT_PATH', '/objects'),
-    ]
+    ],
 ];

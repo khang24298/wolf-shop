@@ -3,9 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Helpers\ItemHelper;
-use Illuminate\Console\Command;
-use GuzzleHttp\Client;
 use App\Models\Item;
+use GuzzleHttp\Client;
+use Illuminate\Console\Command;
+
 class ImportItem extends Command
 {
     /**
@@ -27,7 +28,7 @@ class ImportItem extends Command
      */
     public function handle()
     {
-        $client = new Client();
+        $client = new Client;
         $code = 0; // 0: success
         $configImport = config('services.import_items');
         $uriImport = $configImport['host'].$configImport['path'];
@@ -37,7 +38,7 @@ class ImportItem extends Command
             foreach ($data as $itemData) {
                 $itemConverted = ItemHelper::mappingRawDataToItem($itemData);
                 $item = Item::where('name', '=', $itemConverted['name'])->first();
-                if (!empty($item)) {
+                if (! empty($item)) {
                     // Update quality if exist
                     $item->quality = $itemConverted['quality'];
                     $item->save();
@@ -47,10 +48,11 @@ class ImportItem extends Command
                 }
             }
             $this->info('Items imported successfully!');
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             $this->error($e->getMessage());
             $code = $e->getCode();
         }
+
         return $code;
     }
 }

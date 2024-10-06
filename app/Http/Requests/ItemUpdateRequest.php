@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
+
 class ItemUpdateRequest extends FormRequest
 {
     /**
@@ -24,9 +25,9 @@ class ItemUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image'   => 'url|max:5000',
+            'image' => 'url|max:5000',
             'quality' => 'int',
-            'sellIn'  => 'int',
+            'sellIn' => 'int',
         ];
     }
 

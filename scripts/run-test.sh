@@ -1,0 +1,1 @@
+docker exec -i laravel-app sh -c 'php artisan test'

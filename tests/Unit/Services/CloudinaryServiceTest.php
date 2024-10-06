@@ -34,7 +34,7 @@ class CloudinaryServiceTest extends TestCase
         $config->shouldReceive('apiSecret')->andReturn($configData['api_secret']);
 
         // Create CloudinaryService instance
-        $cloudinaryService = new CloudinaryService();
+        $cloudinaryService = new CloudinaryService;
 
         // Assert that configuration is set correctly
         $this->assertEquals($configData['cloud_name'], $cloudinaryService->getConfiguration()->cloud->cloudName);
@@ -56,7 +56,7 @@ class CloudinaryServiceTest extends TestCase
             ->andThrowException(new \Exception('Upload failed'));
 
         // Create CloudinaryService instance
-        $cloudinaryService = new CloudinaryService();
+        $cloudinaryService = new CloudinaryService;
 
         // Test exception handling
         $this->expectException(\Exception::class);

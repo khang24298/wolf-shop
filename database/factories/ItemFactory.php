@@ -18,9 +18,9 @@ class ItemFactory extends Factory
     {
         return [
             'name' => fake()->unique()->name(),
-            'quality' => fake()->numberBetween(30,50),
-            'sellIn' => fake()->numberBetween(1,20),
-            'imgUrl' => null
+            'quality' => fake()->numberBetween(30, 50),
+            'sellIn' => fake()->numberBetween(1, 20),
+            'imgUrl' => null,
         ];
     }
 }

@@ -1,8 +1,8 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Console\Commands\ImportItem;
-use App\Helpers\ItemHelper;
 use App\Models\Item;
 use GuzzleHttp\Client;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,7 +25,7 @@ class ImportItemTest extends TestCase
             ->andReturn('{"items":[{"name":"Test Item", "quality":10}]}');
 
         // Run the command
-        $command = new ImportItem();
+        $command = new ImportItem;
         $exitCode = $command->handle();
 
         // Assert the result

@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Item;
-use Illuminate\Http\Request;
 use App\Http\Requests\ItemUpdateRequest;
+use App\Models\Item;
 use App\Services\CloudinaryService;
+use Illuminate\Http\Request;
+
 class ItemController extends Controller
 {
-    public function __construct(){
-    }
+    public function __construct() {}
+
     /**
      * Display a listing of the resource.
      */
@@ -41,11 +42,11 @@ class ItemController extends Controller
     public function update(ItemUpdateRequest $request, int $id)
     {
         $item = Item::find($id);
-        if (!$item){
+        if (! $item) {
             return response()->json(['message' => 'Item not found'], 404);
         }
 
-        $cloudinaryService = new CloudinaryService();
+        $cloudinaryService = new CloudinaryService;
         try {
             $response = $cloudinaryService->uploadMedia($request['image']);
             $item->imgUrl = $response['secure_url'];
@@ -55,12 +56,12 @@ class ItemController extends Controller
             $message = 'Updated successfully!';
             $code = 0; // 0: success
             $statusCode = 200;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $message = $e->getMessage();
             $code = $e->getCode();
             $statusCode = 500;
         }
-    
+
         return response()->json(['code' => $code, 'message' => $message, 'data' => $item], $statusCode);
     }
 

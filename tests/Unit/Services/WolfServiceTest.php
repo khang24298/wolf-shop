@@ -2,35 +2,35 @@
 
 namespace Tests\Unit\Services;
 
-use PHPUnit\Framework\TestCase;
 use App\Models\Item;
 use App\Services\WolfService;
+use PHPUnit\Framework\TestCase;
+
 class WolfServiceTest extends TestCase
 {
-
     /**
      * Unit test for update quality when SellIn is Positive and Quality less than 50
      */
     public function testUpdateQualityWhenSellInPositiveAndQualityLessThan50()
     {
         // Create test items
-        $tempItem1 = new Item();
+        $tempItem1 = new Item;
         $tempItem1->setBaseItem('Apple AirPods', 10, 40);
         $item1 = $tempItem1->getBaseItem();
 
-        $tempItem2 = new Item();
+        $tempItem2 = new Item;
         $tempItem2->setBaseItem('Apple iPad Air', 10, 40);
         $item2 = $tempItem2->getBaseItem();
 
-        $tempItem3 = new Item();
+        $tempItem3 = new Item;
         $tempItem3->setBaseItem('Samsung Galaxy S23', 10, 80);
         $item3 = $tempItem3->getBaseItem();
 
-        $tempItem4 = new Item();
+        $tempItem4 = new Item;
         $tempItem4->setBaseItem('Xiaomi Redmi Note 13', 10, 40);
         $item4 = $tempItem4->getBaseItem();
 
-        $tempItem5 = new Item();
+        $tempItem5 = new Item;
         $tempItem5->setBaseItem('Other Item Names', 10, 40);
         $item5 = $tempItem5->getBaseItem();
 
@@ -59,23 +59,23 @@ class WolfServiceTest extends TestCase
     public function testUpdateQualityWhenSellInNegativeAndQualityLessThan50()
     {
         // Create test items
-        $tempItem1 = new Item();
+        $tempItem1 = new Item;
         $tempItem1->setBaseItem('Apple AirPods', -2, 40);
         $item1 = $tempItem1->getBaseItem();
 
-        $tempItem2 = new Item();
+        $tempItem2 = new Item;
         $tempItem2->setBaseItem('Apple iPad Air', -2, 40);
         $item2 = $tempItem2->getBaseItem();
 
-        $tempItem3 = new Item();
+        $tempItem3 = new Item;
         $tempItem3->setBaseItem('Samsung Galaxy S23', -20, 80);
         $item3 = $tempItem3->getBaseItem();
 
-        $tempItem4 = new Item();
+        $tempItem4 = new Item;
         $tempItem4->setBaseItem('Xiaomi Redmi Note 13', -2, 40);
         $item4 = $tempItem4->getBaseItem();
 
-        $tempItem5 = new Item();
+        $tempItem5 = new Item;
         $tempItem5->setBaseItem('Other Item Names', -2, 40);
         $item5 = $tempItem5->getBaseItem();
 
@@ -104,23 +104,23 @@ class WolfServiceTest extends TestCase
     public function testUpdateQualityWhenSellInPositiveAndQualityEqual50()
     {
         // Create test items
-        $tempItem1 = new Item();
+        $tempItem1 = new Item;
         $tempItem1->setBaseItem('Apple AirPods', 10, 50);
         $item1 = $tempItem1->getBaseItem();
 
-        $tempItem2 = new Item();
+        $tempItem2 = new Item;
         $tempItem2->setBaseItem('Apple iPad Air', 10, 50);
         $item2 = $tempItem2->getBaseItem();
 
-        $tempItem3 = new Item();
+        $tempItem3 = new Item;
         $tempItem3->setBaseItem('Samsung Galaxy S23', 30, 80);
         $item3 = $tempItem3->getBaseItem();
 
-        $tempItem4 = new Item();
+        $tempItem4 = new Item;
         $tempItem4->setBaseItem('Xiaomi Redmi Note 13', 10, 50);
         $item4 = $tempItem4->getBaseItem();
 
-        $tempItem5 = new Item();
+        $tempItem5 = new Item;
         $tempItem5->setBaseItem('Other Item Names', 10, 50);
         $item5 = $tempItem5->getBaseItem();
 
@@ -149,23 +149,23 @@ class WolfServiceTest extends TestCase
     public function testUpdateQualityWhenSellInNegativeAndQualityEqual50()
     {
         // Create test items
-        $tempItem1 = new Item();
+        $tempItem1 = new Item;
         $tempItem1->setBaseItem('Apple AirPods', -2, 50);
         $item1 = $tempItem1->getBaseItem();
 
-        $tempItem2 = new Item();
+        $tempItem2 = new Item;
         $tempItem2->setBaseItem('Apple iPad Air', -2, 50);
         $item2 = $tempItem2->getBaseItem();
 
-        $tempItem3 = new Item();
+        $tempItem3 = new Item;
         $tempItem3->setBaseItem('Samsung Galaxy S23', -2, 80);
         $item3 = $tempItem3->getBaseItem();
 
-        $tempItem4 = new Item();
+        $tempItem4 = new Item;
         $tempItem4->setBaseItem('Xiaomi Redmi Note 13', -2, 50);
         $item4 = $tempItem4->getBaseItem();
 
-        $tempItem5 = new Item();
+        $tempItem5 = new Item;
         $tempItem5->setBaseItem('Other Item Names', -2, 50);
         $item5 = $tempItem5->getBaseItem();
 
@@ -187,5 +187,4 @@ class WolfServiceTest extends TestCase
         $this->assertEquals(-3, $item4->sellIn);
         $this->assertEquals(-3, $item5->sellIn);
     }
-
 }
