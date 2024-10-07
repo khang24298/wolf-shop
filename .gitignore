@@ -6,6 +6,7 @@
 /storage/*.key
 /vendor
 /mysql_data
+/mysql_data_test
 .env
 .env.backup
 .env.production

@@ -43,7 +43,7 @@ class ItemHelperTest extends TestCase
         $mappedItem = ItemHelper::mappingRawDataToItem($sampleRawItem);
         $expectedItem = [
             'name' => 'Google Pixel 6 Pro',
-            'quality' => 50,
+            'quality' => 80,
             'sellIn' => 0,
             'imgUrl' => null,
         ];

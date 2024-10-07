@@ -1,0 +1,38 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t khang24298/wolfshop .
+
+      - name: Run tests
+        run: docker run --rm khang24298/wolfshop test
+
+      - name: Push Docker image to registry
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-image.tar
+          path: docker-image.tar
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-image.tar
+
+      - name: Deploy to environment
+        run: docker load -i docker-image.tar && docker-compose up -d

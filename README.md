@@ -1,66 +1,70 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Coding assessment - WolfShop Service - PHP Version
+_______
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### SETUP INSTRUCTION
+- Prerequisite:
+    - Docker environment installed
+    - Docker compose installed
+    - (For Windows OS only) Windows Subsystem for Linux installed
+- Run application:
+    - At root project dir run `./scripts/startup/run-app.sh`
+    - After command finishes setup with successful migration, you are able to access application via `http://localhost:8080`
+    - Command to import item: `docker exec -i wolfshop-app sh -c "php artisan app:import-item"`
+    - Post man api for updating `imgUrl` can be found in `WoflShop.postman_collection.json`
+    - Want to access to DB? Here is your info:
+      - Host: `wolfshop-mysql`
+      - Port: `3306`
+      - User: `app_user`
+      - Password: `app_password`
+    - Want to interact with Docker Container? Run: `docker exec -i wolfshop-app sh`
+- Run test:
+    - At root project dir run `./scripts/tests/run-test.sh` to run full tests
+    - Want to run specific test? Run `docker exec -it wolfshop-app sh -c "php artisan test --env=testing --filter={TestClassName}"` where `{TestClassName}` is your specific test file. E.g`ItemImportTest`
+- FYI: For the goal: import `Item` to our inventory  from API `https://api.restful-api.dev/objects`.
+    - `Quality` doesn't present in response. Make assumption it would be `response['data']['Price'] or $response['data']['price']` property. And set limit for maximum is `80`.
+    - `SellIn` doesn't present in response. Make assumption it would be `SellIn = (currentYear - response['data']['year']) * 365`
+- ToDo:
+    - CI/CD: Plan is running CI/CD via Github Action, skeleton in `.github/workflows/ci-cd.yml`
+    - DevOps for Server scalability
+## Project features
+We have a system in place that updates our inventory for us.
 
-## About Laravel
+- All items have a `SellIn` value which denotes the number of days we have to sell the items
+- All items have a `Quality` value which denotes how valuable the item is
+- At the end of each day our system lowers both values for every item
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Pretty simple, right? Well this is where it gets interesting:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Once the sell by date has passed, Quality degrades twice as fast
+- The Quality of an item is never negative
+- **"Apple AirPods"** actually increases in Quality the older it gets
+- The Quality of an item is never more than 50
+- **"Samsung Galaxy S23"**, being a legendary item, never has to be sold or decreases in Quality
+- **"Apple iPad Air"**, like **"Apple AirPods"**, increases in Quality as its SellIn value approaches;
+- `Quality` increases by `2` when there are `10` days or less and by `3` when there are `5` days or less but
+- `Quality` drops to `0` after the concert
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+We have recently signed a supplier of conjured items. This requires an update to our system:
 
-## Learning Laravel
+- **"Xiaomi Redmi Note 13"** items degrade in `Quality` twice as fast as normal items
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Feel free to make any changes to the `UpdateQuality` method and add any new code as long as everything still works correctly. 
+However, do not alter the Item class or Items property as those belong to the goblin in the corner who will insta-rage and one-shot you as he doesn't believe in shared code ownership (you can make the `UpdateQuality` method and `Items` property static if you like, we'll cover for you).
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Just for clarification, an item can never have its `Quality` increase above `50`, however **"Samsung Galaxy S23"** is a legendary item and as such its `Quality` is `80` & it never alters.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Old Folders
+- `src` - contains the two classes:
+    - `Item.php` - this class should not be changed
+    - `WolfService.php` - this class needs to be refactored, and the new feature
+## New Folders 
+- Changed to `app`
+    - `Models\Base\Item.php` - Keep the original code for `src\Item.php`
+    - `Services\WolfService.php` - Refactor and update the updateQuality function for `src\WolfService.php`
+## 🎯 Goal
+- Refactor the `WolfService` class to make any changes to the `UpdateQuality` method and add any new code as long as everything still works correctly.
+- Store the `Items` in a storage engine of your choice. (e.g. Database, In-memory)
+- Create a console command to import `Item` to our inventory  from API `https://api.restful-api.dev/objects` (https://restful-api.dev/). In case Item already exists by `name` in the storage, update `Quality` for it.
+- Provide another API endpoint to upload `imgUrl` via [https://cloudinary.com](https://cloudinary.com/documentation/php_image_and_video_upload) (credentials will be sent in email's attachment) for the `Item`. API should be authentication with basic username/password login. The credentials can be hardcoded.
+- Unit testing.
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

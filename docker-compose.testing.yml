@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   # WolfShop Application
   wolfshop-app:
@@ -14,16 +13,16 @@ services:
       - APACHE_DOCUMENT_ROOT=/var/www/html/public
       - APACHE_LOG_DIR=/var/log/apache2
     depends_on:
-      - wolfshop-mysql
+      - wolfshop-mysql-test
     networks:
-      - wolfshop-net
+      - wolfshop-net-test
 
   # WolfShop Test Database
   wolfshop-mysql-test:
     image: mysql:8.0
     container_name: wolfshop-mysql-test
     ports:
-      - "33061:33061"
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root_password
       MYSQL_DATABASE: wolf_shop_test
@@ -32,7 +31,7 @@ services:
     volumes:
       - ./mysql_data_test:/var/lib/mysql
     networks:
-      - wolfshop-net
+      - wolfshop-net-test
 
 networks:
-  wolfshop-net:
+  wolfshop-net-test:

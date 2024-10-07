@@ -1,5 +1,4 @@
-# docker compose down
-# docker compose up -d
-# time docker exec -it wolfshop-app sh -c 'sleep 2 && php artisan migrate --seed'
-COMMAND='php artisan test '$@
+docker-compose down --remove-orphans
+docker-compose -f docker-compose.testing.yml up -d
+COMMAND='sleep 3 && php artisan test --env=testing '$@
 docker exec -i wolfshop-app sh -c "$COMMAND"
