@@ -7,6 +7,8 @@ _______
     - Docker compose installed
     - (For Windows OS only) Windows Subsystem for Linux installed
 - Run application:
+    - Copy the .env.example to .env 
+    - Paste the CLOUDINARY credentials to .env corresponding
     - At root project dir run `./scripts/startup/run-app.sh`
     - After command finishes setup with successful migration, you are able to access application via `http://localhost:8080`
     - Command to import item: `docker exec -i wolfshop-app sh -c "php artisan app:import-item"`
